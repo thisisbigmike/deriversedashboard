@@ -1,47 +1,45 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { authConfig } from "@/auth.config";
 
-export default auth((req) => {
-    const isLoggedIn = !!req.auth;
-    const { pathname } = req.nextUrl;
+export async function middleware(request: NextRequest) {
+  const sessionToken = request.cookies.get("authjs.session-token")?.value || 
+                      request.cookies.get("__Secure-authjs.session-token")?.value;
+  
+  const isLoggedIn = !!sessionToken;
+  const { pathname } = request.nextUrl;
 
-    // Public routes that don't require authentication
-    const publicRoutes = [
-        "/",
-        "/login",
-        "/register",
-        "/api/auth",
-        "/verify-email",
-        "/forgot-password",
-        "/reset-password",
-        "/api/crypto"  // Allow public API access
-    ];
-    const isPublicRoute = publicRoutes.some((route) =>
-        pathname === route || pathname.startsWith(route + "/") ||
-        (route !== "/" && pathname.startsWith(route))
-    );
+  // Simple manual check based on the logic in auth.config.ts
+  const isOnDashboard = pathname.startsWith('/dashboard');
+  
+  // Public routes
+  const publicRoutes = [
+      "/",
+      "/login",
+      "/register",
+      "/api/auth",
+      "/verify-email",
+      "/forgot-password",
+      "/reset-password",
+      "/api/crypto"
+  ];
+  
+  const isPublicRoute = publicRoutes.some((route) =>
+      pathname === route || pathname.startsWith(route + "/")
+  );
 
-    // Allow public routes
-    if (isPublicRoute) {
-        return NextResponse.next();
-    }
+  if (isOnDashboard) {
+      if (isLoggedIn) return NextResponse.next();
+      return NextResponse.redirect(new URL('/login', request.url));
+  } else if (isLoggedIn) {
+      if (pathname === '/login' || pathname === '/register') {
+          return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+  }
 
-    // Protected routes that require authentication
-    const protectedRoutes = ["/settings", "/api/user", "/profile"];
-    const isProtectedRoute = protectedRoutes.some((route) =>
-        pathname.startsWith(route)
-    );
-
-    // Redirect to login only for protected routes
-    if (isProtectedRoute && !isLoggedIn) {
-        const loginUrl = new URL("/login", req.nextUrl.origin);
-        loginUrl.searchParams.set("callbackUrl", pathname);
-        return NextResponse.redirect(loginUrl);
-    }
-
-    return NextResponse.next();
-});
+  return NextResponse.next();
+}
 
 export const config = {
-    matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
