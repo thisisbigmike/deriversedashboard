@@ -87,56 +87,60 @@ export function useDeriverseData() {
                         setJournalEntries(restoredEntries);
                         setUseMockData(false); // We are using "persisted" data
                     }
-                } else {
-                    // 2. No cache? Initialize new data
+                }
 
-                    if (connected && publicKey) {
-                        // case: NEW WALLET CONNECTION -> Generate Mock Data
-                        const walletAddress = publicKey.toBase58();
-                        const [newTrades, newPositions, newAccount] = await Promise.all([
-                            fetchTradeHistory(walletAddress),
-                            fetchOpenPositions(walletAddress),
-                            fetchAccountInfo(walletAddress),
-                        ]);
+                // 2. Always fetch fresh data (Stale-While-Revalidate)
+                // We keep the old data in the store briefly while fetching the new one.
 
-                        const newEntries = generateJournalEntries(newTrades);
+                // 2. No cache? Initialize new data
 
-                        if (!cancelled) {
-                            setTrades(newTrades);
-                            setPositions(newPositions);
-                            setAccount(newAccount);
-                            setJournalEntries(newEntries);
-                            setUseMockData(false);
+                if (connected && publicKey) {
+                    // case: NEW WALLET CONNECTION -> Generate Mock Data
+                    const walletAddress = publicKey.toBase58();
+                    const [newTrades, newPositions, newAccount] = await Promise.all([
+                        fetchTradeHistory(walletAddress),
+                        fetchOpenPositions(walletAddress),
+                        fetchAccountInfo(walletAddress),
+                    ]);
 
-                            // Save immediately to establish the record
-                            const initialData = {
-                                trades: newTrades,
-                                positions: newPositions,
-                                account: newAccount,
-                                journalEntries: newEntries
-                            };
-                            localStorage.setItem(storageKey, JSON.stringify(initialData));
-                        }
+                    const newEntries = generateJournalEntries(newTrades);
 
-                    } else if (session?.user) {
-                        // case: NEW USER SIGNUP -> Start EMPTY
-                        if (!cancelled) {
-                            setTrades([]);
-                            setPositions([]);
-                            setAccount(null);
-                            setJournalEntries([]);
-                            setUseMockData(false);
+                    if (!cancelled) {
+                        setTrades(newTrades);
+                        setPositions(newPositions);
+                        setAccount(newAccount);
+                        setJournalEntries(newEntries);
+                        setUseMockData(false);
 
-                            // Save empty state
-                            localStorage.setItem(storageKey, JSON.stringify({
-                                trades: [],
-                                positions: [],
-                                account: null,
-                                journalEntries: []
-                            }));
-                        }
+                        // Save immediately to establish the record
+                        const initialData = {
+                            trades: newTrades,
+                            positions: newPositions,
+                            account: newAccount,
+                            journalEntries: newEntries
+                        };
+                        localStorage.setItem(storageKey, JSON.stringify(initialData));
+                    }
+
+                } else if (session?.user) {
+                    // case: NEW USER SIGNUP -> Start EMPTY
+                    if (!cancelled) {
+                        setTrades([]);
+                        setPositions([]);
+                        setAccount(null);
+                        setJournalEntries([]);
+                        setUseMockData(false);
+
+                        // Save empty state
+                        localStorage.setItem(storageKey, JSON.stringify({
+                            trades: [],
+                            positions: [],
+                            account: null,
+                            journalEntries: []
+                        }));
                     }
                 }
+
 
             } catch (err) {
                 if (!cancelled) {

@@ -23,16 +23,13 @@ export async function fetchTradeHistory(
         // const history = await engine.getClientHistory(new PublicKey(walletAddress));
 
         // Since V1 exact history method might differ, we'll wrap this safely
-        // If SDK fails or returns empty, fallback to mock for now to keep UI working
+        // If SDK fails or returns empty, we return empty array for connected users
+        // instead of confusing them with mock data.
         console.log('Fetching real trades for:', walletAddress);
 
-        // TODO: Implement actual SDK call when types are confirmed
-        // const trades = history.map(t => mapSdkTradeToAppTrade(t));
-        // if (trades.length > 0) return trades;
-
-        return generateTrades(days);
+        return [];
     } catch (error) {
-        console.warn('Failed to fetch real trade history, using mock:', error);
-        return generateTrades(days);
+        console.warn('Failed to fetch real trade history:', error);
+        return [];
     }
 }

@@ -40,12 +40,12 @@ export default function DashboardOverview() {
             <StatsGrid stats={stats} />
 
             {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                 <Card className="lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Cumulative PnL & Drawdown</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[200px] sm:h-[300px]">
+                    <CardContent className="h-[250px] sm:h-[300px]">
                         <PnLChart data={dailyPnL} showDrawdown={true} />
                     </CardContent>
                 </Card>
@@ -65,7 +65,7 @@ export default function DashboardOverview() {
             </div>
 
             {/* Volume and Fee Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <Card>
                     <CardHeader>
                         <CardTitle>Trading Volume</CardTitle>

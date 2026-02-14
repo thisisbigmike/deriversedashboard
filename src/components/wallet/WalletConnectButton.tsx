@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Wallet, ChevronDown, Copy, LogOut, Check } from 'lucide-react';
+import { Wallet, ChevronDown, Copy, LogOut, Check, ArrowRightLeft } from 'lucide-react';
 
 export function WalletConnectButton() {
     const { publicKey, disconnect, connecting, connected } = useWallet();
@@ -25,9 +25,25 @@ export function WalletConnectButton() {
         }
     }, [fullAddress]);
 
-    const handleDisconnect = useCallback(() => {
-        disconnect();
+    const handleChangeWallet = useCallback(async () => {
         setShowDropdown(false);
+        try {
+            await disconnect();
+            // Small delay to ensure state clears before showing modal
+            setTimeout(() => setVisible(true), 100);
+        } catch (error) {
+            console.error('Failed to change wallet:', error);
+        }
+    }, [disconnect, setVisible]);
+
+    const handleDisconnect = useCallback(async () => {
+        try {
+            await disconnect();
+        } catch (error) {
+            console.error('Failed to disconnect wallet:', error);
+        } finally {
+            setShowDropdown(false);
+        }
     }, [disconnect]);
 
     const openModal = useCallback(() => {
@@ -89,6 +105,16 @@ export function WalletConnectButton() {
                                         <Copy className="w-4 h-4" />
                                     )}
                                     {copied ? 'Copied!' : 'Copy Address'}
+                                </button>
+
+                                <button
+                                    onClick={handleChangeWallet}
+                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg
+                                        text-sm text-cyan-300 hover:text-cyan-200 hover:bg-cyan-500/10
+                                        transition-all duration-150"
+                                >
+                                    <ArrowRightLeft className="w-4 h-4" />
+                                    Change Wallet
                                 </button>
 
                                 <button

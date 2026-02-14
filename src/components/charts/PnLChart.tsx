@@ -94,17 +94,27 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
                     dy={10}
                 />
                 <YAxis
+                    yAxisId="left"
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
                     tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                     domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
                 />
+                <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    axisLine={false}
+                    tickLine={false}
+                    hide={true}
+                    domain={['dataMin - 5', 0]}
+                />
                 <Tooltip content={<CustomTooltip />} />
                 <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
 
                 {showDrawdown && (
                     <Bar
+                        yAxisId="right"
                         dataKey="drawdownNegative"
                         fill="#FF4B4B"
                         fillOpacity={0.15}
@@ -113,6 +123,7 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
                 )}
 
                 <Area
+                    yAxisId="left"
                     type="monotone"
                     dataKey="cumulativePnl"
                     stroke={data[data.length - 1]?.cumulativePnl >= 0 ? '#00F0FF' : '#FF4B4B'}

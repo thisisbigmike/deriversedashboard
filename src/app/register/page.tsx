@@ -67,7 +67,7 @@ export default function RegisterPage() {
 
             <div className="relative w-full max-w-md">
                 {/* Glass card */}
-                <div className="liquid-glass rounded-3xl p-8 shadow-2xl">
+                <div className="liquid-glass rounded-3xl p-6 sm:p-8 shadow-2xl">
                     {/* Logo/Brand */}
                     <div className="text-center mb-8">
                         <img src="/logo.png" alt="Deriverse" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
