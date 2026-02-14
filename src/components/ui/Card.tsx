@@ -51,7 +51,7 @@ interface CardHeaderProps {
 
 export function CardHeader({ children, className = '' }: CardHeaderProps) {
     return (
-        <div className={`p-4 border-b border-white/5 ${className}`}>
+        <div className={`p-4 border-b border-border ${className}`}>
             {children}
         </div>
     );
@@ -64,7 +64,7 @@ interface CardTitleProps {
 
 export function CardTitle({ children, className = '' }: CardTitleProps) {
     return (
-        <h3 className={`text-sm font-medium text-white/70 ${className}`}>
+        <h3 className={`text-sm font-medium text-muted-foreground ${className}`}>
             {children}
         </h3>
     );
@@ -100,19 +100,19 @@ export function StatCard({ title, value, subtitle, change, icon, glow = 'cyan' }
         <Card glow={glow} className="p-4">
             <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                    <p className="text-xs font-medium text-white/50 uppercase tracking-wider">{title}</p>
-                    <p className="text-2xl font-bold text-white">{value}</p>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
+                    <p className="text-2xl font-bold text-foreground">{value}</p>
                     {subtitle && (
-                        <p className="text-xs text-white/40">{subtitle}</p>
+                        <p className="text-xs text-muted-foreground">{subtitle}</p>
                     )}
                     {change !== undefined && (
-                        <p className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : isNegative ? 'text-red-400' : 'text-white/40'}`}>
+                        <p className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : isNegative ? 'text-red-400' : 'text-muted-foreground'}`}>
                             {isPositive ? '+' : ''}{change}%
                         </p>
                     )}
                 </div>
                 {icon && (
-                    <div className="p-2 rounded-lg bg-white/5">
+                    <div className="p-2 rounded-lg bg-secondary/50">
                         {icon}
                     </div>
                 )}

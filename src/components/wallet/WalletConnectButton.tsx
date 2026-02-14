@@ -78,15 +78,15 @@ export function WalletConnectButton() {
 
                         {/* Dropdown */}
                         <div className="absolute right-0 top-full mt-2 w-56 rounded-xl 
-                            liquid-glass
+                            bg-popover border border-border
                             shadow-xl shadow-black/50 z-50 overflow-hidden">
 
                             {/* Address display */}
-                            <div className="px-4 py-3 border-b border-white/5">
-                                <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                            <div className="px-4 py-3 border-b border-border">
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
                                     Connected Wallet
                                 </p>
-                                <p className="text-sm text-white font-mono truncate">
+                                <p className="text-sm text-foreground font-mono truncate">
                                     {truncatedAddress}
                                 </p>
                             </div>
@@ -96,7 +96,7 @@ export function WalletConnectButton() {
                                 <button
                                     onClick={handleCopy}
                                     className="w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                                        text-sm text-white/70 hover:text-white hover:bg-white/5
+                                        text-sm text-muted-foreground hover:text-foreground hover:bg-muted
                                         transition-all duration-150"
                                 >
                                     {copied ? (
@@ -110,7 +110,7 @@ export function WalletConnectButton() {
                                 <button
                                     onClick={handleChangeWallet}
                                     className="w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                                        text-sm text-cyan-300 hover:text-cyan-200 hover:bg-cyan-500/10
+                                        text-sm text-primary hover:text-primary/80 hover:bg-primary/10
                                         transition-all duration-150"
                                 >
                                     <ArrowRightLeft className="w-4 h-4" />
@@ -120,7 +120,7 @@ export function WalletConnectButton() {
                                 <button
                                     onClick={handleDisconnect}
                                     className="w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                                        text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10
+                                        text-sm text-destructive hover:text-destructive/80 hover:bg-destructive/10
                                         transition-all duration-150"
                                 >
                                     <LogOut className="w-4 h-4" />
@@ -141,10 +141,10 @@ export function WalletConnectButton() {
                 disabled
                 className="flex items-center gap-2 px-4 py-2 rounded-xl
                     liquid-glass
-                    text-sm font-medium text-white/50
+                    text-sm font-medium text-muted-foreground
                     cursor-not-allowed opacity-60"
             >
-                <div className="w-4 h-4 border-2 border-white/30 border-t-cyan-400 rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-muted-foreground border-t-primary rounded-full animate-spin" />
                 Connecting...
             </button>
         );
@@ -155,9 +155,9 @@ export function WalletConnectButton() {
         <button
             onClick={openModal}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl
-                liquid-glass-cyan
-                text-sm font-medium text-cyan-300
-                hover:text-white
+                bg-primary/10 border border-primary/20
+                text-sm font-medium text-primary
+                hover:bg-primary/20 hover:text-primary-foreground
                 transition-all duration-300"
         >
             <Wallet className="w-4 h-4" />

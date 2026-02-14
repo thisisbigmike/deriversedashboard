@@ -44,17 +44,17 @@ export function PortfolioAnalysis({ symbolStats, portfolioStats }: PortfolioAnal
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="flex items-center gap-4 p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                                className="flex items-center gap-4 p-3 rounded-lg bg-secondary/50 hover:bg-secondary/70 transition-colors"
                             >
                                 {/* Symbol Info */}
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-sm font-medium text-white">{symbol.symbol}</span>
+                                        <span className="text-sm font-medium text-foreground">{symbol.symbol}</span>
                                         <Badge variant={isProfit ? 'success' : 'danger'} size="sm">
                                             {symbol.winRate.toFixed(0)}% WR
                                         </Badge>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-white/40">
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                         <span>{symbol.trades} trades</span>
                                         <span>•</span>
                                         <span>${(symbol.volume / 1000).toFixed(1)}K vol</span>
@@ -70,7 +70,7 @@ export function PortfolioAnalysis({ symbolStats, portfolioStats }: PortfolioAnal
                                 </div>
 
                                 {/* Volume Bar */}
-                                <div className="w-20 h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div className="w-20 h-2 bg-secondary rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${volumePercent}%` }}
@@ -95,8 +95,8 @@ export function PortfolioAnalysis({ symbolStats, portfolioStats }: PortfolioAnal
 
                 <CardContent className="space-y-6">
                     {/* Total Value */}
-                    <div className="p-4 rounded-xl bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-white/10">
-                        <p className="text-xs text-white/50 mb-1">Total Profit/Loss</p>
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-border">
+                        <p className="text-xs text-muted-foreground mb-1">Total Profit/Loss</p>
                         <div className="flex items-center gap-2">
                             {portfolioStats.totalPnl >= 0 ? (
                                 <TrendingUp className="w-6 h-6 text-emerald-400" />
@@ -114,29 +114,29 @@ export function PortfolioAnalysis({ symbolStats, portfolioStats }: PortfolioAnal
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5">
-                            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">Total Volume</p>
-                            <p className="text-sm sm:text-lg font-semibold text-white">${(portfolioStats.totalVolume / 1000000).toFixed(2)}M</p>
+                        <div className="p-3 rounded-lg bg-secondary/50 border border-border">
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Total Volume</p>
+                            <p className="text-sm sm:text-lg font-semibold text-foreground">${(portfolioStats.totalVolume / 1000000).toFixed(2)}M</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5">
-                            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">Total Fees</p>
-                            <p className="text-sm sm:text-lg font-semibold text-white">${portfolioStats.totalFees.toLocaleString()}</p>
+                        <div className="p-3 rounded-lg bg-secondary/50 border border-border">
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Total Fees</p>
+                            <p className="text-sm sm:text-lg font-semibold text-foreground">${portfolioStats.totalFees.toLocaleString()}</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5">
-                            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">Sharpe Ratio</p>
-                            <p className="text-sm sm:text-lg font-semibold text-white">{portfolioStats.sharpeRatio}</p>
+                        <div className="p-3 rounded-lg bg-secondary/50 border border-border">
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Sharpe Ratio</p>
+                            <p className="text-sm sm:text-lg font-semibold text-foreground">{portfolioStats.sharpeRatio}</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5">
-                            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">Profit Factor</p>
-                            <p className="text-sm sm:text-lg font-semibold text-white">{portfolioStats.profitFactor}</p>
+                        <div className="p-3 rounded-lg bg-secondary/50 border border-border">
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Profit Factor</p>
+                            <p className="text-sm sm:text-lg font-semibold text-foreground">{portfolioStats.profitFactor}</p>
                         </div>
                     </div>
 
                     {/* Long/Short Split */}
                     <div>
-                        <p className="text-[10px] text-white/40 uppercase tracking-wider mb-2">Position Bias</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Position Bias</p>
                         <div className="flex items-center gap-2">
-                            <div className="flex-1 h-3 bg-white/10 rounded-full overflow-hidden flex">
+                            <div className="flex-1 h-3 bg-secondary rounded-full overflow-hidden flex">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${portfolioStats.longRatio}%` }}

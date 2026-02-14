@@ -19,14 +19,14 @@ export function WinRateChart({ wins, losses, winRate }: WinRateChartProps) {
         if (!active || !payload || !payload.length) return null;
 
         return (
-            <div className="liquid-glass rounded-lg p-2 shadow-xl">
+            <div className="bg-popover border border-border rounded-lg p-2 shadow-xl">
                 <div className="flex items-center gap-2">
                     <div
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: payload[0]?.payload?.color }}
                     />
-                    <span className="text-xs text-white/70">{payload[0]?.name}:</span>
-                    <span className="text-xs font-medium text-white">{payload[0]?.value}</span>
+                    <span className="text-xs text-muted-foreground">{payload[0]?.name}:</span>
+                    <span className="text-xs font-medium text-foreground">{payload[0]?.value}</span>
                 </div>
             </div>
         );
@@ -61,8 +61,8 @@ export function WinRateChart({ wins, losses, winRate }: WinRateChartProps) {
 
             {/* Center text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xl sm:text-3xl font-bold text-white">{winRate.toFixed(0)}%</span>
-                <span className="text-[10px] sm:text-xs text-white/50">Win Rate</span>
+                <span className="text-xl sm:text-3xl font-bold text-foreground">{winRate.toFixed(0)}%</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">Win Rate</span>
             </div>
         </div>
     );

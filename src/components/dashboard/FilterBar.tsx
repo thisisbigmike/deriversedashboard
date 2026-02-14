@@ -39,7 +39,7 @@ export function FilterBar({ filters, onFilterChange, onRefresh }: FilterBarProps
         <div className="flex flex-wrap items-center gap-4 p-4 rounded-xl liquid-glass">
             {/* Symbol Filter */}
             <div className="flex flex-col gap-1">
-                <label className="text-[10px] text-white/40 uppercase tracking-wider">Symbol</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Symbol</label>
                 <Select
                     options={SYMBOL_OPTIONS}
                     value={filters.symbol}
@@ -50,7 +50,7 @@ export function FilterBar({ filters, onFilterChange, onRefresh }: FilterBarProps
 
             {/* Order Type Filter */}
             <div className="flex flex-col gap-1">
-                <label className="text-[10px] text-white/40 uppercase tracking-wider">Order Type</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Order Type</label>
                 <Select
                     options={ORDER_TYPE_OPTIONS}
                     value={filters.orderType}
@@ -61,7 +61,7 @@ export function FilterBar({ filters, onFilterChange, onRefresh }: FilterBarProps
 
             {/* Side Filter */}
             <div className="flex flex-col gap-1">
-                <label className="text-[10px] text-white/40 uppercase tracking-wider">Side</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Side</label>
                 <Select
                     options={SIDE_OPTIONS}
                     value={filters.side}
@@ -72,7 +72,7 @@ export function FilterBar({ filters, onFilterChange, onRefresh }: FilterBarProps
 
             {/* Date Range */}
             <div className="flex flex-col gap-1">
-                <label className="text-[10px] text-white/40 uppercase tracking-wider">Time Range</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Time Range</label>
                 <DateRangePicker
                     value={filters.timeframe}
                     onChange={(value) => onFilterChange({ timeframe: value as TimeframeOption['value'] })}

@@ -28,6 +28,7 @@ interface DashboardStore {
     useMockData: boolean;
     isLoading: boolean;
     error: string | null;
+    refreshKey: number;
 
     // Actions — Data
     setTrades: (trades: Trade[]) => void;
@@ -40,6 +41,7 @@ interface DashboardStore {
     setFilters: (filters: Partial<FilterState>) => void;
     setTimeframe: (timeframe: TimeframeValue) => void;
     resetFilters: () => void;
+    triggerRefresh: () => void;
 
     // Actions — UI
     setSidebarOpen: (open: boolean) => void;
@@ -71,6 +73,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
     useMockData: true,
     isLoading: true,
     error: null,
+    refreshKey: 0,
 
     // Actions — Data
     setTrades: (trades) => set({ trades }),
@@ -137,6 +140,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
             filters: { ...state.filters, timeframe },
         })),
     resetFilters: () => set({ filters: DEFAULT_FILTERS }),
+    triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
 
     // UI actions
     setSidebarOpen: (open) => set({ sidebarOpen: open }),

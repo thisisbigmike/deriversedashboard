@@ -58,23 +58,23 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
 
     return (
         <>
-            <div className="liquid-glass rounded-2xl overflow-hidden border border-white/10">
-                <div className="p-6 border-b border-white/5 flex flex-row items-center justify-between">
+            <div className="liquid-glass rounded-2xl overflow-hidden border border-border">
+                <div className="p-6 border-b border-border flex flex-row items-center justify-between">
                     <div>
-                        <h3 className="text-lg font-medium text-white mb-1">Trade History</h3>
-                        <p className="text-xs text-white/40">Your recent trading activity</p>
+                        <h3 className="text-lg font-medium text-foreground mb-1">Trade History</h3>
+                        <p className="text-xs text-muted-foreground">Your recent trading activity</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="bg-white/5 hover:bg-white/10 text-white/60 hover:text-white border border-white/5"
+                            className="bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground border border-border"
                             onClick={() => setIsExportOpen(true)}
                         >
                             <Download className="w-4 h-4 mr-2" />
                             Export
                         </Button>
-                        <Badge variant="outline" className="bg-white/5 border-white/10 text-white/60">
+                        <Badge variant="outline" className="bg-secondary/20 border-border text-muted-foreground">
                             {trades.length} trades
                         </Badge>
                     </div>
@@ -82,32 +82,32 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
 
                 <div className="w-full">
                     {/* Table Header - hidden on mobile */}
-                    <div className="hidden md:grid grid-cols-8 gap-4 px-6 py-4 border-b border-white/5 bg-white/[0.02]">
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Date</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Symbol</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Side</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Entry</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Exit</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">Size</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30">PnL</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-white/30 text-right">Actions</span>
+                    <div className="hidden md:grid grid-cols-8 gap-4 px-6 py-4 border-b border-border bg-muted/20">
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Date</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Symbol</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Side</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Entry</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Exit</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Size</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">PnL</span>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground text-right">Actions</span>
                     </div>
 
                     {/* Table Body */}
-                    <div className="divide-y divide-white/5">
+                    <div className="divide-y divide-border">
                         {visibleTrades.map((trade) => (
                             <div key={trade.id} className="group transition-all duration-200">
                                 {/* Mobile Card Row */}
                                 <div
-                                    className="md:hidden px-4 py-4 hover:bg-white/[0.02] cursor-pointer"
+                                    className="md:hidden px-4 py-4 hover:bg-muted/50 cursor-pointer"
                                     onClick={() => setExpandedTrade(expandedTrade === trade.id ? null : trade.id)}
                                 >
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-2">
                                             <div className={`w-1 h-8 rounded-full ${trade.pnl >= 0 ? 'bg-emerald-500/50' : 'bg-red-500/50'}`} />
                                             <div>
-                                                <span className="text-sm font-medium text-white block">{trade.symbol}</span>
-                                                <span className="text-[10px] text-white/40">{formatDate(trade.entryTime)}</span>
+                                                <span className="text-sm font-medium text-foreground block">{trade.symbol}</span>
+                                                <span className="text-[10px] text-muted-foreground">{formatDate(trade.entryTime)}</span>
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-end">
@@ -119,21 +119,21 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
 
                                 {/* Desktop Table Row */}
                                 <div
-                                    className={`hidden md:grid grid-cols-8 gap-4 px-6 py-4 items-center hover:bg-white/[0.04] cursor-pointer border-l-2 border-transparent hover:border-cyan-500/50 transition-all ${expandedTrade === trade.id ? 'bg-white/[0.04] border-l-cyan-500' : ''}`}
+                                    className={`hidden md:grid grid-cols-8 gap-4 px-6 py-4 items-center hover:bg-muted/30 cursor-pointer border-l-2 border-transparent hover:border-cyan-500/50 transition-all ${expandedTrade === trade.id ? 'bg-muted/30 border-l-cyan-500' : ''}`}
                                     onClick={() => setExpandedTrade(expandedTrade === trade.id ? null : trade.id)}
                                 >
-                                    <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
+                                    <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                                         {formatDate(trade.entryTime)}
                                     </span>
-                                    <span className="text-sm font-medium text-white">{trade.symbol}</span>
+                                    <span className="text-sm font-medium text-foreground">{trade.symbol}</span>
                                     <div><SideBadge side={trade.side} /></div>
-                                    <span className="text-xs text-white/60 font-mono">${trade.entryPrice.toLocaleString()}</span>
-                                    <span className="text-xs text-white/60 font-mono">${trade.exitPrice.toLocaleString()}</span>
-                                    <span className="text-xs text-white/60 font-mono">{trade.size.toFixed(4)}</span>
+                                    <span className="text-xs text-muted-foreground font-mono">${trade.entryPrice.toLocaleString()}</span>
+                                    <span className="text-xs text-muted-foreground font-mono">${trade.exitPrice.toLocaleString()}</span>
+                                    <span className="text-xs text-muted-foreground font-mono">{trade.size.toFixed(4)}</span>
                                     <div><PnLBadge value={trade.pnl} /></div>
                                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
-                                            className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-all"
+                                            className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setExpandedTrade(trade.id);
@@ -153,28 +153,28 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                                             animate={{ height: 'auto', opacity: 1 }}
                                             exit={{ height: 0, opacity: 0 }}
                                             transition={{ duration: 0.2 }}
-                                            className="overflow-hidden bg-black/20"
+                                            className="overflow-hidden bg-background/20"
                                         >
-                                            <div className="px-6 py-6 border-t border-white/5 space-y-6">
+                                            <div className="px-6 py-6 border-t border-border space-y-6">
                                                 {/* Trade Details Grid */}
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                                                     <div className="space-y-1">
-                                                        <span className="text-[10px] uppercase tracking-wider text-white/30">Order Type</span>
-                                                        <Badge variant="outline" className="bg-white/5 border-white/5">{trade.orderType}</Badge>
+                                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Order Type</span>
+                                                        <Badge variant="outline" className="bg-secondary/20 border-border">{trade.orderType}</Badge>
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <span className="text-[10px] uppercase tracking-wider text-white/30">Duration</span>
-                                                        <div className="flex items-center gap-1.5 text-xs text-white/80">
+                                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Duration</span>
+                                                        <div className="flex items-center gap-1.5 text-xs text-foreground">
                                                             <Clock className="w-3.5 h-3.5 text-cyan-400" />
                                                             {formatDuration(trade.duration)}
                                                         </div>
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <span className="text-[10px] uppercase tracking-wider text-white/30">Total Fees</span>
-                                                        <span className="text-xs text-white/80 font-mono">${trade.totalFees.toFixed(2)}</span>
+                                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Total Fees</span>
+                                                        <span className="text-xs text-foreground font-mono">${trade.totalFees.toFixed(2)}</span>
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <span className="text-[10px] uppercase tracking-wider text-white/30">Return</span>
+                                                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Return</span>
                                                         <span className={`text-xs font-bold ${trade.pnlPercent >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                                             {trade.pnlPercent >= 0 ? '+' : ''}{trade.pnlPercent.toFixed(2)}%
                                                         </span>
@@ -182,15 +182,15 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                                                 </div>
 
                                                 {/* Notes Section - Redesigned */}
-                                                <div className="space-y-3 pt-4 border-t border-white/5">
+                                                <div className="space-y-3 pt-4 border-t border-border">
                                                     <div className="flex items-center gap-2">
                                                         <Tag className="w-3.5 h-3.5 text-cyan-400" />
-                                                        <span className="text-xs font-medium text-white/80">Journal Notes</span>
+                                                        <span className="text-xs font-medium text-foreground">Journal Notes</span>
                                                     </div>
 
                                                     {trade.notes && editingNoteId !== trade.id ? (
-                                                        <div className="group relative bg-white/[0.03] rounded-xl p-4 border border-white/5 hover:border-white/10 transition-colors">
-                                                            <p className="text-sm text-white/80 whitespace-pre-wrap leading-relaxed">
+                                                        <div className="group relative bg-muted/20 rounded-xl p-4 border border-border hover:border-border/80 transition-colors">
+                                                            <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
                                                                 {trade.notes}
                                                             </p>
                                                             <Button
@@ -211,8 +211,8 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                                                                 value={noteText}
                                                                 onChange={(e) => setNoteText(e.target.value)}
                                                                 placeholder={editingNoteId === trade.id ? "Edit your note..." : "Write your thoughts on this trade..."}
-                                                                className="w-full h-24 px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-sm text-white placeholder-white/20 focus:outline-none focus:border-cyan-500/50 resize-none font-handwriting leading-relaxed"
-                                                                style={{ backgroundImage: 'linear-gradient(transparent 95%, rgba(255,255,255,0.05) 95%)', backgroundSize: '100% 24px', lineHeight: '24px' }}
+                                                                className="w-full h-24 px-4 py-3 rounded-xl bg-background/50 border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-cyan-500/50 resize-none font-handwriting leading-relaxed"
+                                                                style={{ backgroundImage: 'linear-gradient(transparent 95%, rgba(128,128,128,0.05) 95%)', backgroundSize: '100% 24px', lineHeight: '24px' }}
                                                                 autoFocus={editingNoteId === trade.id}
                                                             />
                                                             <div className="flex justify-end gap-2">
@@ -253,8 +253,8 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/[0.02]">
-                        <span className="text-xs text-white/40">
+                    <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/20">
+                        <span className="text-xs text-muted-foreground">
                             Page {currentPage} of {totalPages}
                         </span>
                         <div className="flex gap-2">
@@ -263,7 +263,7 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                                 size="sm"
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="h-8 w-8 p-0 rounded-lg hover:bg-white/10"
+                                className="h-8 w-8 p-0 rounded-lg hover:bg-muted"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </Button>
@@ -272,7 +272,7 @@ export function TradeHistory({ trades, onAddNote }: TradeHistoryProps) {
                                 size="sm"
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="h-8 w-8 p-0 rounded-lg hover:bg-white/10"
+                                className="h-8 w-8 p-0 rounded-lg hover:bg-muted"
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </Button>

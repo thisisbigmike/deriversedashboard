@@ -50,7 +50,7 @@ export function LivePriceTicker() {
     return (
         <div className="flex items-center gap-1">
             {/* Price ticker */}
-            <div className="flex items-center gap-3 px-3 py-1 bg-white/5 rounded-xl border border-white/10">
+            <div className="flex items-center gap-3 px-3 py-1 bg-secondary/50 rounded-xl border border-border">
                 <AnimatePresence mode="popLayout">
                     {DISPLAY_ORDER.map((symbol) => {
                         const quote = prices[symbol];
@@ -64,12 +64,12 @@ export function LivePriceTicker() {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
-                                className="flex items-center gap-2 px-2 py-0.5 rounded-lg hover:bg-white/5 transition-colors cursor-default"
+                                className="flex items-center gap-2 px-2 py-0.5 rounded-lg hover:bg-secondary transition-colors cursor-default"
                             >
                                 {/* Symbol icon */}
-                                <div className="w-6 h-6 flex items-center justify-center rounded-full overflow-hidden bg-white/10">
-                                    <img 
-                                        src={SYMBOL_ICONS[symbol]} 
+                                <div className="w-6 h-6 flex items-center justify-center rounded-full overflow-hidden bg-secondary">
+                                    <img
+                                        src={SYMBOL_ICONS[symbol]}
                                         alt={symbol}
                                         className="w-full h-full object-cover"
                                     />
@@ -78,15 +78,15 @@ export function LivePriceTicker() {
                                 {/* Price info */}
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-1">
-                                        <span className="text-xs font-medium text-white/70">
+                                        <span className="text-xs font-medium text-muted-foreground">
                                             {symbol.replace('-PERP', '')}
                                         </span>
                                         <motion.span
                                             key={quote.price}
                                             initial={{ scale: 1.1, color: isPositive ? '#22c55e' : '#ef4444' }}
-                                            animate={{ scale: 1, color: '#ffffff' }}
+                                            animate={{ scale: 1, color: 'var(--foreground)' }}
                                             transition={{ duration: 0.3 }}
-                                            className="text-sm font-semibold text-white"
+                                            className="text-sm font-semibold text-foreground"
                                         >
                                             {formatPrice(quote.price)}
                                         </motion.span>
@@ -106,7 +106,7 @@ export function LivePriceTicker() {
             {/* Refresh button & timestamp */}
             <button
                 onClick={refresh}
-                className="p-2 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
                 title={lastUpdated ? `Last updated: ${lastUpdated.toLocaleTimeString()}` : 'Refresh prices'}
             >
                 <RefreshCw size={14} />

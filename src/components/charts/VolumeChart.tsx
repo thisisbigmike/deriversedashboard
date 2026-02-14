@@ -29,20 +29,20 @@ export function VolumeChart({ data }: VolumeChartProps) {
         if (!active || !payload || !payload.length) return null;
 
         return (
-            <div className="liquid-glass rounded-lg p-3 shadow-xl">
-                <p className="text-xs text-white/60 mb-2">{label}</p>
+            <div className="bg-popover border border-border rounded-lg p-3 shadow-xl">
+                <p className="text-xs text-muted-foreground mb-2">{label}</p>
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-purple-400" />
-                        <span className="text-xs text-white/70">Volume:</span>
-                        <span className="text-xs font-medium text-white">
+                        <span className="text-xs text-muted-foreground">Volume:</span>
+                        <span className="text-xs font-medium text-foreground">
                             ${(payload[0]?.value * 1000)?.toLocaleString()}
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-cyan-400" />
-                        <span className="text-xs text-white/70">Trades:</span>
-                        <span className="text-xs font-medium text-white">
+                        <span className="text-xs text-muted-foreground">Trades:</span>
+                        <span className="text-xs font-medium text-foreground">
                             {payload[0]?.payload?.trades}
                         </span>
                     </div>
@@ -64,14 +64,14 @@ export function VolumeChart({ data }: VolumeChartProps) {
                     dataKey="date"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+                    tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }}
                     dy={10}
                     interval="preserveStartEnd"
                 />
                 <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+                    tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }}
                     tickFormatter={(value) => `$${value.toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />

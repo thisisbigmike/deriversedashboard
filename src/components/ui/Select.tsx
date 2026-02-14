@@ -40,19 +40,19 @@ export function Select({ options, value, onChange, placeholder = 'Select...', cl
                 onClick={() => setIsOpen(!isOpen)}
                 className="
           w-full px-3 py-2 rounded-lg
-          bg-white/5 border border-white/10
-          text-sm text-white/80
+          bg-popover border border-border
+          text-sm text-foreground
           flex items-center justify-between gap-2
-          hover:bg-white/10 hover:border-white/20
+          hover:bg-popover/80 hover:border-border/80
           transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-cyan-500/50
+          focus:outline-none focus:ring-2 focus:ring-primary/50
         "
             >
-                <span className={selectedOption ? 'text-white' : 'text-white/40'}>
+                <span className={selectedOption ? 'text-foreground' : 'text-muted-foreground'}>
                     {selectedOption?.label || placeholder}
                 </span>
                 <ChevronDown
-                    className={`w-4 h-4 text-white/40 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                 />
             </button>
 
@@ -65,9 +65,9 @@ export function Select({ options, value, onChange, placeholder = 'Select...', cl
                         transition={{ duration: 0.15 }}
                         className="
               absolute top-full left-0 right-0 mt-1 z-50
-              liquid-glass
+              bg-popover border border-border
               rounded-lg
-              shadow-xl shadow-black/50
+              shadow-xl shadow-black/10 dark:shadow-black/50
               max-h-60 overflow-auto
             "
                     >
@@ -82,8 +82,8 @@ export function Select({ options, value, onChange, placeholder = 'Select...', cl
                   w-full px-3 py-2 text-left text-sm
                   transition-colors duration-150
                   ${option.value === value
-                                        ? 'bg-cyan-500/20 text-cyan-300'
-                                        : 'text-white/70 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-primary/20 text-primary'
+                                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                     }
                 `}
                             >

@@ -11,12 +11,12 @@ interface BadgeProps {
 
 export function Badge({ children, variant = 'default', size = 'sm', className = '' }: BadgeProps) {
     const variants = {
-        success: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-        danger: 'bg-red-500/20 text-red-400 border-red-500/30',
-        warning: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-        info: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
-        default: 'bg-white/10 text-white/70 border-white/20',
-        outline: 'border border-white/20 text-white/70 bg-transparent',
+        success: 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30 dark:text-emerald-400',
+        danger: 'bg-red-500/20 text-red-500 border-red-500/30 dark:text-red-400',
+        warning: 'bg-amber-500/20 text-amber-500 border-amber-500/30 dark:text-amber-400',
+        info: 'bg-cyan-500/20 text-cyan-500 border-cyan-500/30 dark:text-cyan-400',
+        default: 'bg-secondary/50 text-secondary-foreground border-border',
+        outline: 'border border-border text-muted-foreground bg-transparent',
     };
 
     const sizes = {

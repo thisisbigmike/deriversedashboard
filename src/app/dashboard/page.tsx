@@ -15,6 +15,7 @@ import { FeeBreakdownChart } from '@/components/charts/FeeBreakdownChart';
 
 export default function DashboardOverview() {
     const isLoading = useDashboardStore((s) => s.isLoading);
+    const triggerRefresh = useDashboardStore((s) => s.triggerRefresh);
     const { filters, setFilters } = useFilters();
     const { filteredTrades, dailyPnL, stats, feeBreakdown, volumeData } = useMetrics();
 
@@ -33,7 +34,7 @@ export default function DashboardOverview() {
             <FilterBar
                 filters={filters}
                 onFilterChange={setFilters}
-                onRefresh={() => console.log('Refreshing...')}
+                onRefresh={triggerRefresh}
             />
 
             {/* Stats Grid */}

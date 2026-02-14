@@ -17,7 +17,7 @@ interface DateRangePickerProps {
 
 export function DateRangePicker({ value, onChange, className = '' }: DateRangePickerProps) {
     return (
-        <div className={`flex items-center gap-1 p-1 rounded-lg bg-white/5 border border-white/10 ${className}`}>
+        <div className={`flex items-center gap-1 p-1 rounded-lg bg-secondary/50 border border-border ${className}`}>
             {TIMEFRAMES.map((tf) => (
                 <button
                     key={tf.value}
@@ -27,7 +27,7 @@ export function DateRangePicker({ value, onChange, className = '' }: DateRangePi
             transition-all duration-200
             ${value === tf.value
                             ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 text-black shadow-lg shadow-cyan-500/25'
-                            : 'text-white/60 hover:text-white hover:bg-white/10'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                         }
           `}
                 >

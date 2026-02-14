@@ -38,11 +38,11 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
     const getSentimentIcon = (sentiment: JournalEntry['sentiment']) => {
         switch (sentiment) {
             case 'positive':
-                return <ThumbsUp className="w-4 h-4 text-emerald-400" />;
+                return <ThumbsUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />;
             case 'negative':
-                return <ThumbsDown className="w-4 h-4 text-red-400" />;
+                return <ThumbsDown className="w-4 h-4 text-red-500 dark:text-red-400" />;
             default:
-                return <Minus className="w-4 h-4 text-white/40" />;
+                return <Minus className="w-4 h-4 text-muted-foreground" />;
         }
     };
 
@@ -53,7 +53,7 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
             case 'negative':
                 return 'border-red-500/30 bg-red-500/5';
             default:
-                return 'border-white/10 bg-white/5';
+                return 'border-border bg-secondary/20';
         }
     };
 
@@ -61,18 +61,18 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-cyan-400" />
+                    <MessageCircle className="w-4 h-4 text-primary" />
                     Trading Journal
                 </CardTitle>
-                <span className="text-xs text-white/40">{entries.length} entries</span>
+                <span className="text-xs text-muted-foreground">{entries.length} entries</span>
             </CardHeader>
 
             <CardContent className="space-y-4">
                 {entries.length === 0 ? (
                     <div className="text-center py-8">
-                        <MessageCircle className="w-8 h-8 text-white/20 mx-auto mb-2" />
-                        <p className="text-sm text-white/40">No journal entries yet</p>
-                        <p className="text-xs text-white/30">Add notes to your trades to see them here</p>
+                        <MessageCircle className="w-8 h-8 text-muted-foreground/50 mx-auto mb-2" />
+                        <p className="text-sm text-muted-foreground">No journal entries yet</p>
+                        <p className="text-xs text-muted-foreground/80">Add notes to your trades to see them here</p>
                     </div>
                 ) : (
                     visibleEntries.map((entry, index) => {
@@ -90,7 +90,7 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
                                     <div className="flex items-center gap-2">
                                         {getSentimentIcon(entry.sentiment)}
                                         {trade && (
-                                            <span className="text-sm font-medium text-white">{trade.symbol}</span>
+                                            <span className="text-sm font-medium text-foreground">{trade.symbol}</span>
                                         )}
                                         {trade && (
                                             <Badge variant={trade.pnl >= 0 ? 'success' : 'danger'}>
@@ -98,7 +98,7 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
                                             </Badge>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-1 text-[10px] text-white/40">
+                                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                                         <Calendar className="w-3 h-3" />
                                         {new Date(entry.createdAt).toLocaleDateString('en-US', {
                                             month: 'short',
@@ -108,14 +108,14 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
                                 </div>
 
                                 {/* Note Content */}
-                                <p className="text-sm text-white/70 leading-relaxed mb-3">
+                                <p className="text-sm text-foreground leading-relaxed mb-3">
                                     {entry.note}
                                 </p>
 
                                 {/* Tags */}
                                 {entry.tags && entry.tags.length > 0 && (
                                     <div className="flex items-center gap-2">
-                                        <Tag className="w-3 h-3 text-white/30" />
+                                        <Tag className="w-3 h-3 text-muted-foreground" />
                                         {entry.tags.map((tag, idx) => (
                                             <Badge key={idx} variant="default" size="sm">
                                                 {tag}
@@ -131,8 +131,8 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
 
             {/* Pagination */}
             {entries.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-6 py-4 border-t border-white/5">
-                    <span className="text-xs text-white/40">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-6 py-4 border-t border-border">
+                    <span className="text-xs text-muted-foreground">
                         Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, entries.length)} of {entries.length}
                     </span>
                     <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export function TradingJournal({ entries, trades }: TradingJournalProps) {
                         >
                             Prev
                         </Button>
-                        <span className="text-xs text-white/60">
+                        <span className="text-xs text-muted-foreground">
                             Page {currentPage} of {totalPages}
                         </span>
                         <Button

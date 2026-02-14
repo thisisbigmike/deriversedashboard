@@ -49,12 +49,12 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
         const drawdownItem = payload.find((p: any) => p.dataKey === 'drawdownNegative');
 
         return (
-            <div className="liquid-glass rounded-lg p-3 shadow-xl">
-                <p className="text-xs text-white/60 mb-2">{label}</p>
+            <div className="bg-popover border border-border rounded-lg p-3 shadow-xl">
+                <p className="text-xs text-muted-foreground mb-2">{label}</p>
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-cyan-400" />
-                        <span className="text-xs text-white/70">Cumulative PnL:</span>
+                        <span className="text-xs text-muted-foreground">Cumulative PnL:</span>
                         <span className={`text-xs font-medium ${pnlItem?.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             ${pnlItem?.value?.toLocaleString()}
                         </span>
@@ -62,7 +62,7 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
                     {showDrawdown && drawdownItem && (
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-red-400" />
-                            <span className="text-xs text-white/70">Drawdown:</span>
+                            <span className="text-xs text-muted-foreground">Drawdown:</span>
                             <span className="text-xs font-medium text-red-400">
                                 {Math.abs(drawdownItem.value || 0).toFixed(1)}%
                             </span>
@@ -90,14 +90,14 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
                     dataKey="date"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+                    tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }}
                     dy={10}
                 />
                 <YAxis
                     yAxisId="left"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+                    tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }}
                     tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                     domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
                 />
@@ -110,7 +110,7 @@ export function PnLChart({ data, showDrawdown = true }: PnLChartProps) {
                     domain={['dataMin - 5', 0]}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
+                <ReferenceLine y={0} stroke="var(--border)" strokeDasharray="3 3" />
 
                 {showDrawdown && (
                     <Bar

@@ -3,6 +3,7 @@ import AuthProvider from "@/components/auth/AuthProvider";
 import WalletProvider from "@/components/wallet/WalletProvider";
 import { Toaster } from "@/components/ui/Toaster";
 import { CryptoPriceProvider } from "@/context/CryptoPriceContext";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 
 export const metadata = {
@@ -20,14 +21,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-transparent text-foreground">
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-background text-foreground">
 
         <AuthProvider>
-          <CryptoPriceProvider>
-            <WalletProvider>{children}</WalletProvider>
-            <Toaster />
-          </CryptoPriceProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <CryptoPriceProvider>
+              <WalletProvider>{children}</WalletProvider>
+              <Toaster />
+            </CryptoPriceProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

@@ -16,18 +16,6 @@ export function formatCurrency(value: number, decimals: number = 2): string {
 }
 
 /**
- * Format a number as compact currency (e.g. $1.2M, $450K)
- */
-export function formatCompactCurrency(value: number): string {
-    const abs = Math.abs(value);
-    const sign = value < 0 ? '-' : '';
-
-    if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(1)}M`;
-    if (abs >= 1_000) return `${sign}$${(abs / 1_000).toFixed(1)}K`;
-    return `${sign}$${abs.toFixed(2)}`;
-}
-
-/**
  * Format a number as a percentage with sign
  * formatPercent(12.345) → "+12.35%"
  * formatPercent(-5.1)   → "-5.10%"
@@ -53,18 +41,6 @@ export function formatDate(date: Date | string): string {
 }
 
 /**
- * Format a Date as short date only
- * formatShortDate(date) → "Feb 10"
- */
-export function formatShortDate(date: Date | string): string {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    return d.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-    });
-}
-
-/**
  * Format duration in minutes to human-readable
  * formatDuration(135) → "2h 15m"
  * formatDuration(45)  → "45m"
@@ -80,15 +56,6 @@ export function formatDuration(minutes: number): string {
     if (days > 0) return `${days}d ${hours}h`;
     if (mins === 0) return `${hours}h`;
     return `${hours}h ${mins}m`;
-}
-
-/**
- * Shorten a Solana wallet address
- * shortenAddress("ABC123...XYZ789") → "ABC1...Z789"
- */
-export function shortenAddress(address: string, chars: number = 4): string {
-    if (address.length <= chars * 2 + 3) return address;
-    return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 }
 
 /**

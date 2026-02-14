@@ -19,14 +19,14 @@ export function FeeBreakdownChart({ data }: FeeBreakdownChartProps) {
         if (!active || !payload || !payload.length) return null;
 
         return (
-            <div className="liquid-glass rounded-lg p-2 shadow-xl">
+            <div className="bg-popover border border-border rounded-lg p-2 shadow-xl">
                 <div className="flex items-center gap-2">
                     <div
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: payload[0]?.payload?.color }}
                     />
-                    <span className="text-xs text-white/70">{payload[0]?.name}:</span>
-                    <span className="text-xs font-medium text-white">
+                    <span className="text-xs text-muted-foreground">{payload[0]?.name}:</span>
+                    <span className="text-xs font-medium text-foreground">
                         ${payload[0]?.value?.toLocaleString()}
                     </span>
                 </div>
@@ -44,7 +44,7 @@ export function FeeBreakdownChart({ data }: FeeBreakdownChartProps) {
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: entry.color }}
                     />
-                    <span className="text-[10px] sm:text-xs text-white/60">{entry.value}</span>
+                    <span className="text-[10px] sm:text-xs text-muted-foreground">{entry.value}</span>
                 </div>
             ))}
         </div>
@@ -67,7 +67,7 @@ export function FeeBreakdownChart({ data }: FeeBreakdownChartProps) {
                             <Cell
                                 key={`cell-${index}`}
                                 fill={entry.color}
-                                stroke="rgba(10,10,20,0.6)"
+                                stroke="var(--background)"
                                 strokeWidth={2}
                             />
                         ))}
@@ -81,8 +81,8 @@ export function FeeBreakdownChart({ data }: FeeBreakdownChartProps) {
                 </PieChart>
             </ResponsiveContainer>
             <div className="text-center pb-2">
-                <span className="text-sm sm:text-lg font-bold text-white">${data.total.toLocaleString()}</span>
-                <span className="text-[9px] sm:text-[10px] text-white/40 ml-1.5">Total Fees</span>
+                <span className="text-sm sm:text-lg font-bold text-foreground">${data.total.toLocaleString()}</span>
+                <span className="text-[9px] sm:text-[10px] text-muted-foreground ml-1.5">Total Fees</span>
             </div>
         </div>
     );

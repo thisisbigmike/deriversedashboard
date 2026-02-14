@@ -26,6 +26,7 @@ export function useDeriverseData() {
         useMockData,
         isLoading,
         error,
+        refreshKey
     } = useDashboardStore();
 
     const { data: session } = useSession(); // Get logged-in user session
@@ -156,7 +157,7 @@ export function useDeriverseData() {
         return () => {
             cancelled = true;
         };
-    }, [storageKey, connected, publicKey, session, setLoading, setError, setTrades, setPositions, setAccount, setJournalEntries, setUseMockData]);
+    }, [storageKey, connected, publicKey, session, setLoading, setError, setTrades, setPositions, setAccount, setJournalEntries, setUseMockData, refreshKey]);
 
     // ─── Auto-Save Effect ─────────────────────────────────────────────────────────
     // Whenever store data changes, verify if we have an active key and save it.

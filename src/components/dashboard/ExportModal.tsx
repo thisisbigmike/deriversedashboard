@@ -114,66 +114,66 @@ export function ExportModal({ isOpen, onClose, trades, journalEntries }: ExportM
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.95, opacity: 0 }}
-                    className="relative w-full max-w-md liquid-glass rounded-2xl p-6 shadow-2xl border border-white/10"
+                    className="relative w-full max-w-md bg-popover rounded-2xl p-6 shadow-2xl border border-border"
                 >
                     <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-semibold text-white">Export Data</h3>
-                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 rounded-full hover:bg-white/10">
-                            <X className="w-5 h-5 text-white/60" />
+                        <h3 className="text-xl font-semibold text-foreground">Export Data</h3>
+                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 rounded-full hover:bg-muted">
+                            <X className="w-5 h-5 text-muted-foreground" />
                         </Button>
                     </div>
 
                     <div className="space-y-4 mb-8">
                         <div
                             onClick={() => setExportType('trades')}
-                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'trades' ? 'bg-cyan-500/10 border-cyan-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
+                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'trades' ? 'bg-primary/10 border-primary/50' : 'bg-secondary/20 border-border hover:bg-secondary/40'}`}
                         >
                             <div className="flex items-center gap-3">
-                                <FileSpreadsheet className={`w-5 h-5 ${exportType === 'trades' ? 'text-cyan-400' : 'text-white/60'}`} />
+                                <FileSpreadsheet className={`w-5 h-5 ${exportType === 'trades' ? 'text-primary' : 'text-muted-foreground'}`} />
                                 <div>
-                                    <p className="text-sm font-medium text-white">Transaction History</p>
-                                    <p className="text-xs text-white/40">Export all executed trades as CSV</p>
+                                    <p className="text-sm font-medium text-foreground">Transaction History</p>
+                                    <p className="text-xs text-muted-foreground">Export all executed trades as CSV</p>
                                 </div>
                             </div>
-                            {exportType === 'trades' && <Check className="w-5 h-5 text-cyan-400" />}
+                            {exportType === 'trades' && <Check className="w-5 h-5 text-primary" />}
                         </div>
 
                         <div
                             onClick={() => setExportType('journal')}
-                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'journal' ? 'bg-cyan-500/10 border-cyan-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
+                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'journal' ? 'bg-primary/10 border-primary/50' : 'bg-secondary/20 border-border hover:bg-secondary/40'}`}
                         >
                             <div className="flex items-center gap-3">
-                                <FileText className={`w-5 h-5 ${exportType === 'journal' ? 'text-cyan-400' : 'text-white/60'}`} />
+                                <FileText className={`w-5 h-5 ${exportType === 'journal' ? 'text-primary' : 'text-muted-foreground'}`} />
                                 <div>
-                                    <p className="text-sm font-medium text-white">Journal</p>
-                                    <p className="text-xs text-white/40">Export your trading notes and tags</p>
+                                    <p className="text-sm font-medium text-foreground">Journal</p>
+                                    <p className="text-xs text-muted-foreground">Export your trading notes and tags</p>
                                 </div>
                             </div>
-                            {exportType === 'journal' && <Check className="w-5 h-5 text-cyan-400" />}
+                            {exportType === 'journal' && <Check className="w-5 h-5 text-primary" />}
                         </div>
 
                         <div
                             onClick={() => setExportType('both')}
-                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'both' ? 'bg-cyan-500/10 border-cyan-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
+                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${exportType === 'both' ? 'bg-primary/10 border-primary/50' : 'bg-secondary/20 border-border hover:bg-secondary/40'}`}
                         >
                             <div className="flex items-center gap-3">
                                 <div className="flex -space-x-2">
-                                    <FileSpreadsheet className={`w-5 h-5 ${exportType === 'both' ? 'text-cyan-400' : 'text-white/60'}`} />
-                                    <FileText className={`w-5 h-5 ${exportType === 'both' ? 'text-cyan-400' : 'text-white/60'}`} />
+                                    <FileSpreadsheet className={`w-5 h-5 ${exportType === 'both' ? 'text-primary' : 'text-muted-foreground'}`} />
+                                    <FileText className={`w-5 h-5 ${exportType === 'both' ? 'text-primary' : 'text-muted-foreground'}`} />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-white">Both Information</p>
-                                    <p className="text-xs text-white/40">Download separate files for both</p>
+                                    <p className="text-sm font-medium text-foreground">Both Information</p>
+                                    <p className="text-xs text-muted-foreground">Download separate files for both</p>
                                 </div>
                             </div>
-                            {exportType === 'both' && <Check className="w-5 h-5 text-cyan-400" />}
+                            {exportType === 'both' && <Check className="w-5 h-5 text-primary" />}
                         </div>
                     </div>
 
                     <Button
                         onClick={handleExport}
                         disabled={isExporting}
-                        className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
                     >
                         {isExporting ? (
                             <span className="animate-pulse">Preparing files...</span>

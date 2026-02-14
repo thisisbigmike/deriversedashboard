@@ -17,6 +17,7 @@ import {
     X,
 } from 'lucide-react';
 import SignOutButton from '@/components/auth/SignOutButton';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -60,24 +61,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             )}
 
             <aside className={`
-        fixed left-0 top-0 bottom-0 w-64 bg-[#1a1a1a]/95 backdrop-blur-xl
-        border-r border-white/5 z-50 flex flex-col
-        transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0
-      `}>
+         fixed left-0 top-0 bottom-0 w-64 bg-sidebar/95 backdrop-blur-xl
+         border-r border-border z-50 flex flex-col
+         transition-transform duration-300 ease-in-out
+         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+         lg:translate-x-0
+       `}>
                 {/* Logo */}
-                <div className="h-16 flex items-center justify-between px-6 border-b border-white/5">
+                <div className="h-16 flex items-center justify-between px-6 border-b border-border">
                     <div className="flex items-center gap-3">
                         <img src="/logo.png" alt="Deriverse" className="w-8 h-8 rounded-lg" />
                         <div>
-                            <h1 className="text-base font-bold text-white" style={{ fontFamily: 'var(--font-geist)' }}>Deriverse</h1>
-                            <p className="text-[10px] text-white/40">Analytics Dashboard</p>
+                            <h1 className="text-base font-bold text-foreground" style={{ fontFamily: 'var(--font-geist)' }}>Deriverse</h1>
+                            <p className="text-[10px] text-muted-foreground">Analytics Dashboard</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="lg:hidden p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/5 transition-colors"
+                        className="lg:hidden p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -85,7 +86,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Main Nav */}
                 <nav className="p-4 space-y-1 flex-1">
-                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3 px-3">Main Menu</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3 px-3">Main Menu</p>
                     {MAIN_NAV.map((item) => {
                         const Icon = item.icon;
                         const active = isActive(item.href);
@@ -96,13 +97,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 href={item.href}
                                 onClick={onClose}
                                 className={`
-                  w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
-                  text-sm font-medium transition-all duration-200
-                  ${active
+                   w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
+                   text-sm font-medium transition-all duration-200
+                   ${active
                                         ? 'bg-gradient-to-r from-[#00d4aa]/20 to-transparent text-[#00d4aa] border-l-2 border-[#00d4aa]'
-                                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                                        : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
                                     }
-                `}
+                 `}
                             >
                                 <Icon className="w-4 h-4" />
                                 {item.label}
@@ -113,7 +114,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Secondary Nav */}
                 <nav className="p-4 space-y-1">
-                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-3 px-3">Support</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3 px-3">Support</p>
                     {SECONDARY_NAV.map((item) => {
                         const Icon = item.icon;
                         return (
@@ -121,7 +122,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 key={item.id}
                                 href={item.href}
                                 onClick={onClose}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/60 hover:bg-white/5 transition-all duration-200"
+                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all duration-200"
                             >
                                 <Icon className="w-4 h-4" />
                                 {item.label}
@@ -133,16 +134,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 {/* Wallet indicator */}
                 {truncatedWallet && (
                     <div className="px-6 pb-2">
-                        <div className="text-[10px] text-white/30 flex items-center gap-1.5">
+                        <div className="text-[10px] text-muted-foreground flex items-center gap-1.5">
                             <div className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] animate-pulse" />
                             {truncatedWallet}
                         </div>
                     </div>
                 )}
 
+                {/* Theme Toggle (Mobile Only) */}
+                <div className="px-6 pb-4 md:hidden">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-white/5">
+                        <span className="text-sm font-medium text-muted-foreground">Theme</span>
+                        <ThemeToggle />
+                    </div>
+                </div>
+
                 {/* User Section */}
                 {session?.user ? (
-                    <div className="p-4 border-t border-white/5">
+                    <div className="p-4 border-t border-border">
                         <div className="flex items-center gap-3 px-3 py-2">
                             {session.user.image ? (
                                 <img
@@ -156,10 +165,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 </div>
                             )}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-white truncate">
+                                <p className="text-sm font-medium text-foreground truncate">
                                     {session.user.name || 'User'}
                                 </p>
-                                <p className="text-[10px] text-white/40 truncate">
+                                <p className="text-[10px] text-muted-foreground truncate">
                                     {session.user.email}
                                 </p>
                             </div>
@@ -167,14 +176,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         </div>
                     </div>
                 ) : (
-                    <div className="p-4 border-t border-white/5">
+                    <div className="p-4 border-t border-border">
                         <Link
                             href="/login"
                             className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl
-                liquid-glass-cyan
-                text-sm font-medium text-cyan-300
-                hover:text-white
-                transition-all duration-300"
+                 bg-primary/10 border border-primary/20
+                 text-sm font-medium text-primary
+                 hover:bg-primary/20 hover:text-primary-foreground
+                 transition-all duration-300"
                         >
                             <LogIn className="w-4 h-4" />
                             Sign in

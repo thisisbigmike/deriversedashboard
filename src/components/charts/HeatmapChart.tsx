@@ -48,7 +48,7 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
                     {HOURS.map((hour, idx) => (
                         <div
                             key={hour}
-                            className="text-[10px] text-white/40"
+                            className="text-[10px] text-muted-foreground"
                             style={{
                                 width: `${100 / 6}%`,
                                 paddingLeft: idx === 0 ? 0 : '4px'
@@ -64,7 +64,7 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
                     {grid.map((row, dayIndex) => (
                         <div key={dayIndex} className="flex items-center gap-1">
                             {/* Day label */}
-                            <div className="w-8 text-[10px] text-white/40 text-right pr-2">
+                            <div className="w-8 text-[10px] text-muted-foreground text-right pr-2">
                                 {DAYS[dayIndex]}
                             </div>
 
@@ -82,14 +82,14 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
                                         {/* Tooltip */}
                                         {cell && cell.trades > 0 && (
                                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
-                                                <div className="liquid-glass rounded-lg p-2 shadow-xl whitespace-nowrap">
-                                                    <p className="text-[10px] text-white/60">
+                                                <div className="bg-popover border border-border rounded-lg p-2 shadow-xl whitespace-nowrap">
+                                                    <p className="text-[10px] text-muted-foreground">
                                                         {DAYS[dayIndex]} {hourIndex}:00
                                                     </p>
                                                     <p className={`text-xs font-medium ${cell.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                                         {cell.pnl >= 0 ? '+' : ''}${cell.pnl.toLocaleString()}
                                                     </p>
-                                                    <p className="text-[10px] text-white/50">{cell.trades} trades</p>
+                                                    <p className="text-[10px] text-muted-foreground/80">{cell.trades} trades</p>
                                                 </div>
                                             </div>
                                         )}
@@ -104,15 +104,15 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
                 <div className="flex items-center justify-center gap-4 pt-2">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-sm bg-red-500/60" />
-                        <span className="text-[10px] text-white/40">Loss</span>
+                        <span className="text-[10px] text-muted-foreground">Loss</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm bg-white/10" />
-                        <span className="text-[10px] text-white/40">No trades</span>
+                        <div className="w-3 h-3 rounded-sm bg-secondary" />
+                        <span className="text-[10px] text-muted-foreground">No trades</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-sm bg-emerald-500/60" />
-                        <span className="text-[10px] text-white/40">Profit</span>
+                        <span className="text-[10px] text-muted-foreground">Profit</span>
                     </div>
                 </div>
             </div>

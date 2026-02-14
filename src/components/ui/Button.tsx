@@ -25,24 +25,24 @@ export function Button({
   const variants = {
     primary: `
       liquid-glass-cyan
-      text-cyan-300 font-semibold
-      hover:text-white
+      text-primary-foreground font-semibold
+      hover:text-primary-foreground
     `,
     secondary: `
       liquid-glass
-      text-white/80
-      hover:text-white
+      text-muted-foreground
+      hover:text-foreground
     `,
     ghost: `
       bg-transparent
-      text-white/70
-      hover:text-white hover:liquid-glass
+      text-muted-foreground
+      hover:text-foreground hover:liquid-glass
       backdrop-blur-sm
     `,
     danger: `
       liquid-glass-danger
-      text-red-400
-      hover:text-red-300
+      text-destructive-foreground
+      hover:text-destructive-foreground
     `,
   };
 
