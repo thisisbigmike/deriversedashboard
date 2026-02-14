@@ -28,10 +28,8 @@ export async function middleware(request: NextRequest) {
         pathname === route || pathname.startsWith(route + "/")
     );
 
-    if (isOnDashboard) {
-        if (isLoggedIn) return NextResponse.next();
-        return NextResponse.redirect(new URL('/login', request.url));
-    } else if (isLoggedIn) {
+    // Dashboard is now public (supports guest/demo mode)
+    if (isLoggedIn) {
         if (pathname === '/login' || pathname === '/register') {
             return NextResponse.redirect(new URL('/dashboard', request.url));
         }
