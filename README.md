@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Deriverse Trading Analytics Dashboard
+
+A professional trading analytics dashboard for [Deriverse](https://deriverse.io) — a Solana-based perpetual futures DEX.
+
+## Features
+
+- **PnL Tracking** — Cumulative P&L, drawdown analysis, daily breakdown
+- **Trade Journal** — Annotate trades, tag strategies, track sentiment
+- **Portfolio Analysis** — Symbol performance, win rates, volume metrics
+- **Advanced Analytics** — Time-based heatmaps, Sharpe ratio, profit factor
+- **Fee Breakdown** — Exact Deriverse fee calculations (maker/taker/funding)
+- **Wallet Integration** — Connect Phantom, Solflare, or Ledger via Solana Wallet Adapter
+- **Mock Data** — Realistic 90-day trade history for demo/development
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS 4
+- **Charts**: Recharts
+- **State**: Zustand
+- **Wallet**: Solana Wallet Adapter
+- **Auth**: NextAuth v5
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your values. For development, only `NEXT_PUBLIC_SOLANA_CLUSTER=devnet` is required.
+
+### 3. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/dashboard](http://localhost:3000/dashboard) to view the dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/dashboard/
+│   ├── layout.tsx              # Dashboard shell (sidebar + header)
+│   ├── page.tsx                # Overview — KPIs, charts, trade history
+│   ├── journal/page.tsx        # Trade journal
+│   ├── portfolio/page.tsx      # Portfolio analysis
+│   └── analytics/page.tsx      # Deep analytics (heatmap, PnL, volume)
+├── components/
+│   ├── charts/                 # Recharts components (PnL, Volume, Fees, etc.)
+│   ├── dashboard/              # StatsGrid, FilterBar, TradeHistory, etc.
+│   ├── layout/                 # Sidebar, Header
+│   └── wallet/                 # WalletProvider, WalletConnectButton
+├── lib/
+│   ├── deriverse/              # SDK layer (client, trades, positions, account)
+│   ├── utils/                  # Fees, metrics, formatters
+│   └── mockData.ts             # 90-day mock trade generator
+├── hooks/                      # useDeriverseData, useMetrics, useFilters
+├── store/                      # Zustand store
+└── types/                      # TypeScript interfaces
+```
 
-## Learn More
+## Deriverse Fee Structure
 
-To learn more about Next.js, take a look at the following resources:
+| Fee Type | Rate | Applies To |
+|----------|------|------------|
+| Taker | 0.05% (5 bps) | Market & Stop orders |
+| Maker | -0.00625% (Rebate) | Limit orders (12.5% of base fee) |
+| Funding | ~0.01% per 8h | Perpetual positions |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Connecting to Devnet
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Set `NEXT_PUBLIC_SOLANA_CLUSTER=devnet` in `.env.local`
+2. Connect a wallet (Phantom, Solflare)
+3. The dashboard will load mock data by default
+4. When the real Deriverse SDK integration is complete, toggle `useMockData` off in the store
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
