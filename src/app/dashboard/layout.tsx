@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
+import { AIChatAssistant } from '@/components/dashboard/AIChatAssistant';
 import { useDeriverseData } from '@/hooks/useDeriverseData';
 
 export default function DashboardLayout({
@@ -16,22 +17,28 @@ export default function DashboardLayout({
     useDeriverseData();
 
     return (
-        <div className="min-h-screen bg-background">
+        <>
+            <div className="min-h-screen bg-background">
 
-            {/* Sidebar */}
-            <Sidebar
-                isOpen={sidebarOpen}
-                onClose={() => setSidebarOpen(false)}
-            />
+                {/* Sidebar */}
+                <Sidebar
+                    isOpen={sidebarOpen}
+                    onClose={() => setSidebarOpen(false)}
+                />
 
-            {/* Main Content */}
-            <main className="lg:ml-64 min-h-screen transition-[margin] duration-300">
-                <Header onMenuToggle={() => setSidebarOpen((prev) => !prev)} />
+                {/* Main Content */}
+                <main className="lg:ml-64 min-h-screen transition-[margin] duration-300">
+                    <Header onMenuToggle={() => setSidebarOpen((prev) => !prev)} />
 
-                <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
-                    {children}
-                </div>
-            </main>
-        </div>
+                    <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+                        {children}
+                    </div>
+                </main>
+            </div>
+
+            {/* AI Chat Assistant — rendered outside layout div to avoid fixed positioning issues */}
+            <AIChatAssistant />
+        </>
     );
 }
+
