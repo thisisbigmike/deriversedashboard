@@ -17,7 +17,16 @@ const PROGRAM_ID =
 // ─── Legacy web3.js helpers (for SOL balance, etc.) ──────────────────────────
 
 export const connection = new Connection(RPC_ENDPOINT, 'confirmed');
-export const programId = new PublicKey(PROGRAM_ID);
+
+// Robust initialization of programId to prevent build failures ("Non-base58 character")
+let pId: PublicKey;
+try {
+    pId = new PublicKey(PROGRAM_ID);
+} catch (err) {
+    console.warn(`Invalid NEXT_PUBLIC_DERIVERSE_PROGRAM_ID ("${PROGRAM_ID}"), falling back to default.`);
+    pId = new PublicKey('CDESjex4EDBKLwx9ZPzVbjiHEHatasb5fhSJZMzNfvw2');
+}
+export const programId = pId;
 
 // ─── Deriverse Engine (singleton) ────────────────────────────────────────────
 // The Engine class from @deriverse/kit expects an @solana/kit `Rpc` object,
