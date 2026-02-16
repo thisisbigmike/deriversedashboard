@@ -1,6 +1,8 @@
+// ─── Account Data Fetching ────────────────────────────────────────────────────
+// Fetches the connected wallet's on-chain account data from Deriverse.
+
 import type { AccountInfo } from '@/types';
-import { getDeriverseEngine, connection } from './client';
-// @ts-ignore
+import { getDeriverseEngine, setEngineSigner, connection } from './client';
 import { PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export async function fetchAccountInfo(
@@ -9,37 +11,60 @@ export async function fetchAccountInfo(
     if (!walletAddress) return null;
 
     try {
-        const engine = getDeriverseEngine();
         const pubKey = new PublicKey(walletAddress);
 
-        // 1. Fetch Wallet Balance (SOL for now, usually USDC for Deriverse)
+        // 1. Fetch SOL wallet balance (always works, even without Deriverse account)
         const balanceLamports = await connection.getBalance(pubKey);
         const walletBalance = balanceLamports / LAMPORTS_PER_SOL;
 
-        // 2. Fetch Protocol Balance (Deposited Collateral)
-        // const clientData = await engine.getClientData(pubKey);
-        // const deposited = clientData ? clientData.collateral : 0;
+        // 2. Try to fetch Deriverse protocol data via SDK
+        let deposited = 0;
+        let feeTier = 'Standard';
 
-        const deposited = 0; // Default until SDK typings are ready
+        try {
+            const engine = await getDeriverseEngine();
+            if (engine) {
+                const signerOk = await setEngineSigner(walletAddress);
+
+                if (signerOk) {
+                    const clientData = await engine.getClientData();
+
+                    // clientData.tokens is a Map<tokenId, { tokenId, amount }>
+                    // Sum all token balances as deposited collateral
+                    if (clientData && clientData.tokens) {
+                        for (const [, tokenData] of clientData.tokens) {
+                            deposited += tokenData.amount;
+                        }
+                    }
+
+                    // Points / trade counts for fee tier estimation
+                    if (clientData) {
+                        const totalTrades = (clientData.spotTrades || 0) + (clientData.perpTrades || 0);
+                        if (totalTrades > 1000) feeTier = 'VIP';
+                        else if (totalTrades > 100) feeTier = 'Advanced';
+                    }
+                }
+            }
+        } catch (sdkErr) {
+            console.warn('SDK client data fetch failed (wallet may not have a Deriverse account):', sdkErr);
+        }
 
         const totalBalance = walletBalance + deposited;
-        // In a real app, 'balance' often refers to total equity (wallet + deposited) or just wallet.
-        // We'll treat 'balance' as wallet balance and 'totalDeposited' as protocol balance.
+        const marginUtilization = totalBalance > 0 ? deposited / totalBalance : 0;
 
         return {
             walletAddress,
-            balance: Number(walletBalance.toFixed(4)), // Show SOL balance for devnet verification
-            availableMargin: Number(deposited.toFixed(2)), // Only deposited is usable for margin usually
-            usedMargin: 0, // Calculated from positions
-            marginUtilization: 0,
-            feeTier: 'Standard',
+            balance: Number(walletBalance.toFixed(4)),
+            availableMargin: Number(deposited.toFixed(2)),
+            usedMargin: 0, // Calculated from positions in the UI
+            marginUtilization: Number(marginUtilization.toFixed(4)),
+            feeTier,
             prepaymentBalance: 0,
             totalDeposited: Number(deposited.toFixed(2)),
             totalWithdrawn: 0,
         };
-
     } catch (error) {
-        console.warn('Failed to fetch real account info:', error);
+        console.warn('Failed to fetch account info:', error);
         return null;
     }
 }

@@ -9,18 +9,38 @@ datasource db {
   provider = "postgresql"
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTH MODELS
+// ═══════════════════════════════════════════════════════════════════════════════
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?   // Hashed password for credentials auth (null for OAuth users)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  password       String?   // Hashed password for credentials auth (null for OAuth users)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  accounts       Account[]
+  sessions       Session[]
+  tradeRecords   TradeRecord[]
+  journalEntries JournalEntry[]
+  linkedWallets  LinkedWallet[]
+}
+
+model LinkedWallet {
+  id            String   @id @default(cuid())
+  userId        String
+  walletAddress String   @unique // One wallet can only belong to one user
+  label         String?  // e.g. "Main Trading Wallet"
+  verifiedAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Account {
@@ -66,4 +86,95 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   @@unique([email, token])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TRADING DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+//
+// ownerIdentifier → Denormalized key: either User.id or wallet public key.
+//                    This is the single field used for all queries.
+// userId          → Set when the owner is a logged-in user (FK to User).
+// walletAddress   → Set when the owner is a Solana wallet.
+//
+// A user can have BOTH a userId and a walletAddress if they link their wallet
+// while logged in. Data is always queried by ownerIdentifier.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── Trade Records ───────────────────────────────────────────────────────────
+// Full trade history persisted to the cloud. Each row represents a single
+// trade or position event fetched from the Deriverse program.
+
+model TradeRecord {
+  id              String   @id @default(cuid())
+  ownerIdentifier String
+  userId          String?
+  walletAddress   String?
+
+  // Trade identity
+  tradeId         String   // Original trade ID from the SDK (e.g. "perp-0-summary")
+  symbol          String   // e.g. "Token0/Token1"
+  side            String   // LONG | SHORT
+  marketType      String   // PERP | SPOT
+  orderType       String   // MARKET | LIMIT | STOP
+
+  // Pricing
+  entryPrice      Float
+  exitPrice       Float
+  size            Float
+  notional        Float
+
+  // PnL
+  pnl             Float
+  pnlPercent      Float
+
+  // Timing
+  entryTime       DateTime
+  exitTime        DateTime
+  duration        Float    // minutes
+
+  // Fees (Deriverse breakdown)
+  makerFee        Float    @default(0)
+  takerFee        Float    @default(0)
+  fundingFee      Float    @default(0)
+  totalFees       Float    @default(0)
+
+  // User annotations
+  notes           String?
+  tags            String[]
+
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerIdentifier, tradeId])
+  @@index([ownerIdentifier])
+  @@index([walletAddress])
+  @@index([symbol])
+  @@index([entryTime])
+}
+
+// ─── Journal Entries ─────────────────────────────────────────────────────────
+// Notes, sentiment, and tags attached to specific trades.
+
+model JournalEntry {
+  id              String   @id @default(cuid())
+  ownerIdentifier String
+  userId          String?
+  walletAddress   String?
+
+  tradeId         String   // The trade this note belongs to
+  note            String
+  tags            String[] // Postgres native array
+  sentiment       String   @default("neutral") // positive | negative | neutral
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerIdentifier, tradeId])
+  @@index([ownerIdentifier])
+  @@index([walletAddress])
 }

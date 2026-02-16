@@ -3,14 +3,18 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const IS_DEV = process.env.NODE_ENV === "development" || !process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "your-resend-api-key";
+
+// Check for valid API key (Resend keys start with "re_")
+const HAS_VALID_KEY = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.startsWith("re_");
+
+// Only skip sending if we don't have a valid key
+const SHOULD_LOG_ONLY = !HAS_VALID_KEY;
 
 export async function sendVerificationEmail(email: string, token: string) {
     const verifyUrl = `${APP_URL}/verify-email?token=${token}`;
 
-    // In development or without valid API key, log to console
-    if (IS_DEV) {
-        console.log("\n========== EMAIL (DEV MODE) ==========");
+    if (SHOULD_LOG_ONLY) {
+        console.log("\n========== EMAIL (LOG MODE) ==========");
         console.log(`To: ${email}`);
         console.log(`Subject: Verify your email address`);
         console.log(`Verify URL: ${verifyUrl}`);
@@ -66,16 +70,14 @@ export async function sendVerificationEmail(email: string, token: string) {
 export async function sendPasswordResetEmail(email: string, token: string) {
     const resetUrl = `${APP_URL}/reset-password?token=${token}`;
 
-    // In development or without valid API key, log to console
-    if (IS_DEV) {
-        console.log("\n========== EMAIL (DEV MODE) ==========");
+    if (SHOULD_LOG_ONLY) {
+        console.log("\n========== EMAIL (LOG MODE) ==========");
         console.log(`To: ${email}`);
         console.log(`Subject: Reset your password`);
         console.log(`Reset URL: ${resetUrl}`);
         console.log("=======================================\n");
         return { success: true };
     }
-
     try {
         const result = await resend.emails.send({
             from: "Deriverse <onboarding@resend.dev>",

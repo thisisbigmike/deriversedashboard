@@ -194,7 +194,7 @@
       inset 0 1px 1px var(--liquid-highlight),
       inset 0 -1px 1px rgba(0, 0, 0, 0.1),
       var(--liquid-shadow);
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 

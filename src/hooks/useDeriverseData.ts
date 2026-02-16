@@ -1,5 +1,15 @@
 // ─── Main Data Fetching Hook ──────────────────────────────────────────────────
-// Watches wallet connection state, fetches data, populates Zustand store.
+// Watches wallet / session state → fetches on-chain data → merges with cloud
+// trade history → loads journal entries from the database.
+//
+// Data flow:
+//   1. Set the owner identity on the store
+//   2. Fetch fresh on-chain data (trades, positions, account) from Deriverse SDK
+//   3. Load previously saved trades from the cloud database
+//   4. Merge: on-chain trades override cloud trades (by tradeId), cloud-only
+//      trades are preserved (e.g. old closed trades no longer on-chain)
+//   5. Save the merged set back to the cloud
+//   6. Load journal entries from the cloud
 
 'use client';
 
@@ -10,8 +20,8 @@ import { useDashboardStore } from '@/store';
 import { fetchTradeHistory } from '@/lib/deriverse/trades';
 import { fetchOpenPositions } from '@/lib/deriverse/positions';
 import { fetchAccountInfo } from '@/lib/deriverse/account';
-import { generateJournalEntries, getGuestDemoData } from '@/lib/mockData';
-import type { Trade, JournalEntry } from '@/types';
+import { getGuestDemoData } from '@/lib/mockData';
+import type { Trade } from '@/types';
 
 export function useDeriverseData() {
     const { publicKey, connected } = useWallet();
@@ -23,30 +33,33 @@ export function useDeriverseData() {
         setLoading,
         setError,
         setUseMockData,
+        setOwner,
+        loadTradesFromCloud,
+        saveTradesToCloud,
+        loadJournalFromCloud,
         useMockData,
         isLoading,
         error,
         refreshKey
     } = useDashboardStore();
 
-    const { data: session } = useSession(); // Get logged-in user session
+    const { data: session } = useSession();
 
-    // Determine the active storage key (Wallet takes priority over Auth)
-    const storageKey = connected && publicKey
-        ? `deriverse_data_wallet_${publicKey.toBase58()}`
-        : session?.user?.email
-            ? `deriverse_data_user_${session.user.email}`
-            : null;
+    // Determine owner identity (wallet takes priority)
+    const ownerIdentifier = connected && publicKey
+        ? publicKey.toBase58()
+        : session?.user?.id || null;
 
-    // ─── Load Data Effect ─────────────────────────────────────────────────────────
+    const userId = session?.user?.id || null;
+    const walletAddress = connected && publicKey ? publicKey.toBase58() : null;
+
+    // ─── Load Data Effect ─────────────────────────────────────────────────────
     useEffect(() => {
         let cancelled = false;
 
         async function loadData() {
-            // If no user and no wallet, we might want to show empty or generic demo data
-            // For now, if no key, we'll just return (or we could load a "guest" set)
-            // If no user and no wallet, we load the guest demo data
-            if (!storageKey) {
+            // ── Guest mode ──
+            if (!ownerIdentifier) {
                 const guestData = getGuestDemoData();
                 if (!cancelled) {
                     setTrades(guestData.trades);
@@ -62,87 +75,60 @@ export function useDeriverseData() {
             setLoading(true);
             setError(null);
 
+            // Clear potential guest data immediately to prevent bleeding into authenticated state
+            setTrades([]);
+            setPositions([]);
+            setAccount(null);
+            setJournalEntries([]);
+            setUseMockData(false);
+
+            // Set owner identity so cloud sync knows who we are
+            setOwner({ ownerIdentifier, userId, walletAddress });
+
             try {
-                // 1. Try to load from LocalStorage
-                const cached = localStorage.getItem(storageKey);
-
-                if (cached) {
-                    const parsed = JSON.parse(cached);
-
-                    // Restore dates (JSON.parse makes them strings)
-                    const restoredTrades = parsed.trades.map((t: Omit<Trade, 'entryTime' | 'exitTime'> & { entryTime: string; exitTime: string }) => ({
-                        ...t,
-                        entryTime: new Date(t.entryTime),
-                        exitTime: new Date(t.exitTime),
-                    }));
-
-                    const restoredEntries = parsed.journalEntries.map((e: Omit<JournalEntry, 'createdAt'> & { createdAt: string }) => ({
-                        ...e,
-                        createdAt: new Date(e.createdAt),
-                    }));
-
-                    if (!cancelled) {
-                        setTrades(restoredTrades);
-                        setPositions(parsed.positions);
-                        setAccount(parsed.account);
-                        setJournalEntries(restoredEntries);
-                        setUseMockData(false); // We are using "persisted" data
-                    }
-                }
-
-                // 2. Always fetch fresh data (Stale-While-Revalidate)
-                // We keep the old data in the store briefly while fetching the new one.
-
-                // 2. No cache? Initialize new data
-
                 if (connected && publicKey) {
-                    // case: NEW WALLET CONNECTION -> Generate Mock Data
-                    const walletAddress = publicKey.toBase58();
-                    const [newTrades, newPositions, newAccount] = await Promise.all([
-                        fetchTradeHistory(walletAddress),
-                        fetchOpenPositions(walletAddress),
-                        fetchAccountInfo(walletAddress),
-                    ]);
+                    // ── Wallet connected: fetch on-chain + merge with cloud ──
+                    const walletAddr = publicKey.toBase58();
 
-                    const newEntries = generateJournalEntries(newTrades);
+                    // Fetch fresh on-chain data and cloud trades in parallel
+                    const [onChainTrades, onChainPositions, onChainAccount, cloudTrades] =
+                        await Promise.all([
+                            fetchTradeHistory(walletAddr),
+                            fetchOpenPositions(walletAddr),
+                            fetchAccountInfo(walletAddr),
+                            loadTradesFromCloud(),
+                        ]);
 
-                    if (!cancelled) {
-                        setTrades(newTrades);
-                        setPositions(newPositions);
-                        setAccount(newAccount);
-                        setJournalEntries(newEntries);
-                        setUseMockData(false);
+                    if (cancelled) return;
 
-                        // Save immediately to establish the record
-                        const initialData = {
-                            trades: newTrades,
-                            positions: newPositions,
-                            account: newAccount,
-                            journalEntries: newEntries
-                        };
-                        localStorage.setItem(storageKey, JSON.stringify(initialData));
-                    }
+                    // Merge: on-chain trades take priority, cloud-only trades are kept
+                    const mergedTrades = mergeTrades(onChainTrades, cloudTrades);
+
+                    setTrades(mergedTrades);
+                    setPositions(onChainPositions);
+                    setAccount(onChainAccount);
+                    setUseMockData(false);
+
+                    // Save merged trades to cloud (background, fire & forget)
+                    saveTradesToCloud(mergedTrades);
+
+                    // Load journal entries from cloud
+                    await loadJournalFromCloud();
 
                 } else if (session?.user) {
-                    // case: NEW USER SIGNUP -> Start EMPTY
-                    if (!cancelled) {
-                        setTrades([]);
-                        setPositions([]);
-                        setAccount(null);
-                        setJournalEntries([]);
-                        setUseMockData(false);
+                    // ── Email login only (no wallet) ──
+                    // Load any previously saved trades + journal from cloud
+                    const cloudTrades = await loadTradesFromCloud();
 
-                        // Save empty state
-                        localStorage.setItem(storageKey, JSON.stringify({
-                            trades: [],
-                            positions: [],
-                            account: null,
-                            journalEntries: []
-                        }));
-                    }
+                    if (cancelled) return;
+
+                    setTrades(cloudTrades);
+                    setPositions([]);
+                    setAccount(null);
+                    setUseMockData(false);
+
+                    await loadJournalFromCloud();
                 }
-
-
             } catch (err) {
                 if (!cancelled) {
                     setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -154,30 +140,32 @@ export function useDeriverseData() {
 
         loadData();
 
-        return () => {
-            cancelled = true;
-        };
-    }, [storageKey, connected, publicKey, session, setLoading, setError, setTrades, setPositions, setAccount, setJournalEntries, setUseMockData, refreshKey]);
-
-    // ─── Auto-Save Effect ─────────────────────────────────────────────────────────
-    // Whenever store data changes, verify if we have an active key and save it.
-    // We need to subscribe to the store state.
-    const trades = useDashboardStore(s => s.trades);
-    const positions = useDashboardStore(s => s.positions);
-    const account = useDashboardStore(s => s.account);
-    const journalEntries = useDashboardStore(s => s.journalEntries);
-
-    useEffect(() => {
-        if (storageKey && !isLoading) {
-            const dataToSave = {
-                trades,
-                positions,
-                account,
-                journalEntries
-            };
-            localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-        }
-    }, [storageKey, trades, positions, account, journalEntries, isLoading]);
+        return () => { cancelled = true; };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ownerIdentifier, connected, publicKey, session, refreshKey]);
 
     return { isLoading, error, useMockData };
+}
+
+// ─── Merge Helper ─────────────────────────────────────────────────────────────
+// On-chain trades override cloud trades with the same ID.
+// Cloud-only trades (old closed trades no longer on-chain) are preserved.
+
+function mergeTrades(onChain: Trade[], cloud: Trade[]): Trade[] {
+    const tradeMap = new Map<string, Trade>();
+
+    // Start with cloud trades (lower priority)
+    for (const t of cloud) {
+        tradeMap.set(t.id, t);
+    }
+
+    // Override with on-chain trades (higher priority = latest data)
+    for (const t of onChain) {
+        tradeMap.set(t.id, t);
+    }
+
+    // Sort by entryTime descending (newest first)
+    return Array.from(tradeMap.values()).sort(
+        (a, b) => new Date(b.entryTime).getTime() - new Date(a.entryTime).getTime()
+    );
 }

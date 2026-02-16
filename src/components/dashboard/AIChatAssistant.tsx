@@ -17,6 +17,8 @@ import {
     BookOpen,
     Zap,
 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useDashboardStore } from '@/store';
 import { useMetrics } from '@/hooks/useMetrics';
 
@@ -85,6 +87,10 @@ export function AIChatAssistant() {
     const [showScrollDown, setShowScrollDown] = useState(false);
     const [mounted, setMounted] = useState(false);
 
+    // Auth & wallet checks
+    const { data: session } = useSession();
+    const { connected } = useWallet();
+
     // Wait until client-side mount for portal
     useEffect(() => {
         setMounted(true);
@@ -120,6 +126,11 @@ export function AIChatAssistant() {
         const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
         setShowScrollDown(scrollHeight - scrollTop - clientHeight > 100);
     };
+
+    // ─── Gate: only show for logged-in OR wallet-connected users ───────────────
+    // All hooks are called above this point (React rules of hooks)
+    if (!mounted) return null;
+    if (!session?.user && !connected) return null;
 
     // ─── Send Message ─────────────────────────────────────────────────────────
 
@@ -230,9 +241,6 @@ export function AIChatAssistant() {
     };
 
     // ─── Render ───────────────────────────────────────────────────────────────
-
-    // Don't render until mounted (SSR safety for portal)
-    if (!mounted) return null;
 
     return createPortal(
         <>

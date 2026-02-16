@@ -1,16 +1,14 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps {
+interface ButtonProps extends HTMLMotionProps<"button"> {
   children: ReactNode;
-  onClick?: () => void;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
-  disabled?: boolean;
   icon?: ReactNode;
+  // HTMLMotionProps already has className, disabled, onClick, type, etc.
 }
 
 export function Button({
@@ -20,7 +18,9 @@ export function Button({
   size = 'md',
   className = '',
   disabled = false,
-  icon
+  icon,
+  type = 'button',
+  ...props
 }: ButtonProps) {
   const variants = {
     primary: `
@@ -58,6 +58,7 @@ export function Button({
       whileTap={{ scale: disabled ? 1 : 0.98 }}
       onClick={onClick}
       disabled={disabled}
+      type={type}
       className={`
         inline-flex items-center justify-center gap-2
         rounded-xl font-medium
@@ -68,6 +69,7 @@ export function Button({
         ${sizes[size]}
         ${className}
       `}
+      {...props}
     >
       {icon}
       {children}

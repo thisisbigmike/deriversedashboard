@@ -83,6 +83,19 @@ export function CardContent({ children, className = '' }: CardContentProps) {
     );
 }
 
+interface CardFooterProps {
+    children: ReactNode;
+    className?: string;
+}
+
+export function CardFooter({ children, className = '' }: CardFooterProps) {
+    return (
+        <div className={`p-4 ${className}`}>
+            {children}
+        </div>
+    );
+}
+
 interface StatCardProps {
     title: string;
     value: string | number;

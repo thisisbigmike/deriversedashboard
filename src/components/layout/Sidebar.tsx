@@ -32,7 +32,7 @@ const MAIN_NAV = [
 ];
 
 const SECONDARY_NAV = [
-    { id: 'settings', label: 'Settings', icon: Settings, href: '/dashboard' },
+    { id: 'settings', label: 'Settings', icon: Settings, href: '/dashboard/settings' },
     { id: 'help', label: 'Help', icon: HelpCircle, href: '/dashboard' },
 ];
 

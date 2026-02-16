@@ -13,6 +13,7 @@ import { WinRateChart } from '@/components/charts/WinRateChart';
 import { VolumeChart } from '@/components/charts/VolumeChart';
 import { FeeBreakdownChart } from '@/components/charts/FeeBreakdownChart';
 
+
 export default function DashboardOverview() {
     const isLoading = useDashboardStore((s) => s.isLoading);
     const triggerRefresh = useDashboardStore((s) => s.triggerRefresh);
@@ -30,6 +31,8 @@ export default function DashboardOverview() {
             transition={{ duration: 0.3 }}
             className="space-y-6"
         >
+
+
             {/* Filter Bar */}
             <FilterBar
                 filters={filters}
